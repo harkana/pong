@@ -1,0 +1,11 @@
+{
+    "watch": [
+        "src",
+        "headers",
+        "main.c",
+        "Makefile",
+        "nodemon.json"
+    ],
+    "ext": "c,h",
+    "exec": "make re && ./pong host"
+}
