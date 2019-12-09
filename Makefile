@@ -1,7 +1,5 @@
 NAME=pong
 SRC= main.c \
-	lib/list.c \
-	lib/node.c \
 	src/client.c \
 	src/server.c \
 	src/handle_client.c \
