@@ -5,7 +5,6 @@ void *client(void *data)
     int fd;
     struct sockaddr_in addr;
     fd_set read_fs;
-    int isRun;
     t_game_info gameInfo;
     char    *buffer;
 
@@ -15,8 +14,7 @@ void *client(void *data)
         perror("buffer:");
         return (NULL);
     }
-    isRun = 1;
-    addr.sin_addr.s_addr = inet_addr("172.16.29.53");
+    addr.sin_addr.s_addr = inet_addr("192.168.0.27");
     addr.sin_port = htons(981);
     addr.sin_family = PF_INET;
     fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -36,7 +34,7 @@ void *client(void *data)
     if (select(FD_SETSIZE, &read_fs, NULL, NULL, NULL) > -1)
     {
         recv(fd, buffer, BUFFER_MAX, 0);
-        buffer = deserialize_game_info(buffer + 784, &gameInfo);
+        buffer = deserialize_game_info(buffer + 800, &gameInfo);
         gameInfo.identity = fd;
         printf("identity %d\n", gameInfo.identity);
         handle_client(&gameInfo);

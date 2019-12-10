@@ -6,9 +6,7 @@ void *server(void *data)
     struct sockaddr_in addr;
     t_game_info *gameInfo;
     char *buffer;
-    int isRun;
 
-    isRun = 1;
     if ((buffer = (char *)malloc(sizeof(*buffer) * (BUFFER_MAX + 1))) == 0)
     {
         perror("buffer:");
@@ -73,8 +71,8 @@ void *server(void *data)
     }
     gameInfo->ball = *init_ball();
     buffer = serialize_game_info(buffer, gameInfo);
-    send(gameInfo->player1.fd, buffer - 784, BUFFER_MAX, 0);
-    send(gameInfo->player2.fd, buffer - 784, BUFFER_MAX, 0);
+    send(gameInfo->player1.fd, buffer - 800, BUFFER_MAX, 0);
+    send(gameInfo->player2.fd, buffer - 800, BUFFER_MAX, 0);
     struct timeval timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = 500;
@@ -86,7 +84,7 @@ void *server(void *data)
     int vy = step;
     char *tmp;
     t_cmd command;
-    while (isRun)
+    while (gameInfo->isRun)
     {
         fd_set read_fs;
 
@@ -114,7 +112,7 @@ void *server(void *data)
             }
             if (FD_ISSET(gameInfo->player1.fd, &read_fs) || FD_ISSET(gameInfo->player2.fd, &read_fs))
             {
-               free(tmp);
+                free(tmp);
             }
         }
         if ((currentTime - lastTime) > 5)
@@ -149,11 +147,14 @@ void *server(void *data)
             }
             moveBall(&gameInfo->ball, vx, vy);
             lastTime = currentTime;
+            if (gameInfo->player1.score == 10 || gameInfo->player2.score == 10)
+            {
+                gameInfo->isRun = 0;
+            }
             broadcast_to_client(gameInfo);
         }
     }
-    //free(tmp);
-    //free(buffer - 784);
+    free(buffer - 800);
     close(fd);
     return (data);
 }

@@ -35,7 +35,7 @@ void getData(t_game_info *gameInfo)
         return;
     }
     recv(gameInfo->identity, buf, BUFFER_MAX, 0);
-    deserialize_game_info(buf + 784, gameInfo);
+    deserialize_game_info(buf + 800, gameInfo);
     free(buf);
 }
 
@@ -81,7 +81,7 @@ void handle_client(t_game_info *gameInfo)
     {
         return;
     }
-    while (isRun)
+    while (gameInfo->isRun)
     {
         SDL_PollEvent(&event);
         pollData(gameInfo);

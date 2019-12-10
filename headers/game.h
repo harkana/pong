@@ -55,6 +55,7 @@ typedef struct s_game_info {
     t_ball          ball;
     int             count_player;
     int             identity;
+    int             isRun;
 }              t_game_info;
 
 typedef struct s_cmd {

@@ -134,11 +134,13 @@ char    *serialize_game_info(char *buffer, t_game_info *gameInfo)
     buffer = serialize_player(buffer, &gameInfo->player2);
     buffer = serialize_ball(buffer, &gameInfo->ball);
     buffer = serialize_int(buffer, gameInfo->count_player);
+    buffer = serialize_int(buffer, gameInfo->isRun);
     return (buffer);
 }
 
 char    *deserialize_game_info(char *buffer, t_game_info *gameInfo)
 {
+    buffer = deserialize_int(buffer, &gameInfo->isRun);
     buffer = deserialize_int(buffer, &gameInfo->count_player);
     buffer = deserialize_ball(buffer, &gameInfo->ball);
     buffer = deserialize_player(buffer, &gameInfo->player2);

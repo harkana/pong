@@ -66,6 +66,7 @@ t_game_info *init_game_info()
     gameInfo->ball.y = 0;
     gameInfo->ball.w = 0;
     gameInfo->ball.h = 0;
+    gameInfo->isRun = 1;
     return (gameInfo);
 }
 
@@ -193,9 +194,9 @@ void broadcast_to_client(t_game_info *gameInfo)
         return;
     }
     buf = serialize_game_info(buf, gameInfo);
-    send(gameInfo->player1.fd, buf - 784, BUFFER_MAX, 0);
-    send(gameInfo->player2.fd, buf - 784, BUFFER_MAX, 0);
-    free(buf - 784);
+    send(gameInfo->player1.fd, buf - 800, BUFFER_MAX, 0);
+    send(gameInfo->player2.fd, buf - 800, BUFFER_MAX, 0);
+    free(buf - 800);
 }
 
 void movePlayer(t_player *player, t_cmd *cmd, int step)
