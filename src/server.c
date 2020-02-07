@@ -14,7 +14,7 @@ void *server(void *data)
     }
     fd = -1;
     addr.sin_addr.s_addr = inet_addr("0.0.0.0");
-    addr.sin_port = htons(981);
+    addr.sin_port = htons(235);
     addr.sin_family = PF_INET;
     gameInfo = init_game_info();
     if (gameInfo == NULL)
@@ -64,15 +64,20 @@ void *server(void *data)
         }
         player->fd = fd_client;
         if (gameInfo->count_player == 0)
-	  gameInfo->player1 = *player;
+        {
+            gameInfo->ball = *init_ball();
+            gameInfo->player1 = *player;
+            buffer = serialize_game_info(buffer, gameInfo);
+            send(gameInfo->player1.fd, buffer - 800, BUFFER_MAX, 0);
+        }
         else if (gameInfo->count_player == 1)
-	  gameInfo->player2 = *player;
+        {
+	        gameInfo->player2 = *player;
+            buffer = serialize_game_info(buffer, gameInfo);
+            send(gameInfo->player2.fd, buffer - 800, BUFFER_MAX, 0);
+        }
         gameInfo->count_player++;
     }
-    gameInfo->ball = *init_ball();
-    buffer = serialize_game_info(buffer, gameInfo);
-    send(gameInfo->player1.fd, buffer - 800, BUFFER_MAX, 0);
-    send(gameInfo->player2.fd, buffer - 800, BUFFER_MAX, 0);
     struct timeval timeout;
     timeout.tv_sec = 0;
     timeout.tv_usec = 500;
@@ -101,14 +106,14 @@ void *server(void *data)
             if (FD_ISSET(gameInfo->player1.fd, &read_fs))
             {
                 recv(gameInfo->player1.fd, tmp, BUFFER_MAX, 0);
-		deserialize_command(tmp + 256, &command);
-		movePlayer(&gameInfo->player1, &command, 2); 
+                deserialize_command(tmp + 256, &command);
+                movePlayer(&gameInfo->player1, &command, 2); 
             }
             else if (FD_ISSET(gameInfo->player2.fd, &read_fs))
             {
                 recv(gameInfo->player2.fd, tmp, BUFFER_MAX, 0);
-		deserialize_command(tmp + 256, &command);
-		movePlayer(&gameInfo->player2, &command, 2);
+                deserialize_command(tmp + 256, &command);
+                movePlayer(&gameInfo->player2, &command, 2);
             }
             if (FD_ISSET(gameInfo->player1.fd, &read_fs) || FD_ISSET(gameInfo->player2.fd, &read_fs))
             {

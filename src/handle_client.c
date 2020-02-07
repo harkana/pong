@@ -88,6 +88,7 @@ void handle_client(t_game_info *gameInfo)
 	if (event.type == SDL_QUIT)
 	  {
 	    isRun = 0;
+        gameInfo->isRun = isRun;
 	  }
         if (event.type == SDL_KEYDOWN)
 	  {

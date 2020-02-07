@@ -14,8 +14,8 @@ void *client(void *data)
         perror("buffer:");
         return (NULL);
     }
-    addr.sin_addr.s_addr = inet_addr("192.168.0.27");
-    addr.sin_port = htons(981);
+    addr.sin_addr.s_addr = inet_addr("172.16.29.53");
+    addr.sin_port = htons(235);
     addr.sin_family = PF_INET;
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1)
