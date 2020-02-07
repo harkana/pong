@@ -60,11 +60,11 @@ void pollData(t_game_info *gameInfo)
 void handle_client(t_game_info *gameInfo)
 {
     SDL_Event event;
-    int isRun;
     SDL_Window *window;
     SDL_Renderer *renderer;
     char *tmp;
     t_cmd cmd;
+    int	isRun;
 
     isRun = 1;
     if (SDL_Init(SDL_INIT_AUDIO | SDL_INIT_VIDEO) == -1)
@@ -81,38 +81,37 @@ void handle_client(t_game_info *gameInfo)
     {
         return;
     }
-    while (gameInfo->isRun)
-    {
-        SDL_PollEvent(&event);
-        pollData(gameInfo);
-        if (event.type == SDL_QUIT)
-        {
-            isRun = 0;
-            send(gameInfo->identity, "quit", strlen("quit") + 1, 0);
-        }
+    while (isRun)
+      {
+	SDL_PollEvent(&event);
+	pollData(gameInfo);
+	if (event.type == SDL_QUIT)
+	  {
+	    isRun = 0;
+	  }
         if (event.type == SDL_KEYDOWN)
-        {
+	  {
             tmp = (char *)malloc(sizeof(*tmp) * (BUFFER_MAX));
             if (tmp == NULL)
             {
-                perror("buffer malloc:");
-                return;
+	      perror("buffer malloc:");
+	      return;
             }
-        }
+	  }
         if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_DOWN)
-        {
+	  {
             strcpy(cmd.name, "down");
-        }
+	  }
         else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_UP)
-        {
+	  {
             strcpy(cmd.name, "up");
-        }
+	  }
         if (event.type == SDL_KEYDOWN)
-        {
+	  {
             serialize_command(tmp, &cmd);
             send(gameInfo->identity, tmp, BUFFER_MAX, 0);
             free(tmp);
-        }
+	  }
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
         SDL_RenderFillRect(renderer, NULL);
